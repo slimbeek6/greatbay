@@ -47,37 +47,30 @@ function postAuction() {
 // Take in the key information for creating an entry in the auctions table: item_name, category, starting_bid.
   // requires inquirer to ask the key questions in the terminal
   inquirer
-  .prompt(
+  .prompt([
     {
     name: "itemName",
     type: "input",
     message: "What is the name of the item you would like to post?"
-    })
+    },
+    {
+    name: "itemCategory",
+    type: "input",
+    message: "What type of item are you trying to auction?"
+    },
+    {
+    name: "startBid",
+    type: "integer",
+    message: "What would you like to use as a starting bid?"
+    }])
     .then(function(answer) {
       // Post this information into the auctions table
-      var name = answer.itemName;
-      inquirer.prompt(
-        {
-        name: "itemCategory",
-        type: "input",
-        message: "What type of item are you trying to auction?"
-        })
-        .then(function(answer) {
-          var category = answer.itemCategory;
-          inquirer.prompt(
-            {
-              name: "startBid",
-              type: "number",
-              message: "What would you like to use as a starting bid?"
-            })
-            .then(function(answer) {
-              var startingbid = answer.startBid;
-              var sql = 'INSERT INTO auctions (item_name, category, starting_bid) VALUES ("'+name+'", "'+category+'", "'+startingbid+'")';
-              connection.query(sql, function (err, res) {
-                if (err) throw err;
-              });
-            })
-        })      
+      var sql = 'INSERT INTO auctions (item_name, category, starting_bid) VALUES ("'+answer.itemName+'", "'+answer.itemCategory+'", "'+answer.startBid+'")';
+      connection.query(sql, function (err, res) {
+        if (err) throw err;
+        console.log("Item posted");
+        start();
+      });
     });
 }
 
